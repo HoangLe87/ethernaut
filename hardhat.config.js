@@ -8,7 +8,6 @@ module.exports = {
     goerli: {
       url: process.env.URL,
       accounts: [process.env.PRIVATE_KEY],
-      allowUnlimitedContractSize: true,
     },
   },
 };
