@@ -1,31 +1,53 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
+const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
-async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
-
-  const lockedAmount = hre.ethers.utils.parseEther("1");
-
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
+const main = async () => {
+  /*const contractFactory = await hre.ethers.getContractFactory("CoinFlipHack");
+  const contract = await contractFactory.deploy();
+  await contract.deployed();
+  console.log("=== contract deployed to ", contract.address);
+  */
+  const hackContractAddress = "0x0a5DB55a90549717aA976bF1add882F3b30ad6CE";
+  const hackContractName = "CoinFlipHack";
+  const signer = await hre.ethers.getSigner();
+  const contract = await hre.ethers.getContractAt(
+    hackContractName,
+    hackContractAddress,
+    signer
   );
-}
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+  console.log("=== flip 1 ===");
+  const tx1 = await contract.hack({
+    gasLimit: 200000,
+  });
+
+  console.log("=== flip 2 ===");
+  const tx2 = await contract.hack({
+    gasLimit: 200000,
+  });
+
+  console.log("=== flip 3 ===");
+  const tx3 = await contract.hack({
+    gasLimit: 200000,
+  });
+
+  console.log("=== flip 4 ===");
+  const tx4 = await contract.hack({
+    gasLimit: 200000,
+  });
+  console.log("=== flip 5 ===");
+  const tx5 = await contract.hack({
+    gasLimit: 200000,
+  });
+  console.log("=== DONE ===");
+};
+
+const runMain = (async () => {
+  try {
+    await main();
+    process.exit(0);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+})();
